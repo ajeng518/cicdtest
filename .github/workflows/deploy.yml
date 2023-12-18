@@ -46,14 +46,6 @@ jobs:
     - name: Gradle로 빌드 실행
       run: ./gradlew clean build
 
-      
- # AWS에 연결
-    - name: Connect to AWS
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
 
     # 빌드파일을 ZIP 파일로 생성
     - name: Make zip file
@@ -64,6 +56,14 @@ jobs:
         cp ./deploy.sh ./deploy/
         cp ./build/libs/*.jar ./deploy/
         zip -r -qq -j ./cicdtest-s3.zip ./deploy
+
+ # AWS에 연결
+    - name: Connect to AWS
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
 
     # S3에 zip 파일 업로드
     - name: Upload to S3
