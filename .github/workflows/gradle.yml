@@ -45,7 +45,7 @@ jobs:
       # application.yml 파일 생성
     - name: make application.yaml
       run: |
-        cd ./src/main/resources
+        cd ../../cicdtest/src/main/resources
         touch ./application.yml
         echo "${{ secrets.APPLICATION }}" > ./application.yml
       shell: bash
@@ -88,16 +88,3 @@ jobs:
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --deployment-group-name cicdtest_group \
           --s3-location bucket=cicdtest-s3,bundleType=zip,key=cicdtest-s3.zip
-
-    # 배포 결과 Slack 알람 전송
-    - name: Slack 알람 발송
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_CHANNEL: general
-        SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-        SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: 배포 결과 => ${{ job.status }}
-        SLACK_TITLE: 배포 결과 알람
-        SLACK_USERNAME: Notification-Bot
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-      if: always()
