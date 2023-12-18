@@ -55,7 +55,7 @@ jobs:
         cp ./Dockerfile ./deploy/
         cp ./deploy.sh ./deploy/
         cp ./build/libs/*.jar ./deploy/
-        zip -r -qq -j ./cicdtest-s3.zip ./deploy
+        zip -r -qq -j ./cicdtest.zip ./deploy
 
  # AWS에 연결
     - name: Connect to AWS
@@ -70,7 +70,7 @@ jobs:
       run: |
         aws s3 cp \
           --region ap-northeast-2 \
-          ./cicdtest-s3.zip s3://backend-app-bucket    
+          ./cicdtest.zip s3://cicdtest-s3    
 
     # CodeDeploy에 배포 요청
     - name: Code Deploy Deployment Request
@@ -78,4 +78,4 @@ jobs:
         aws deploy create-deployment --application-name cicdtest \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --deployment-group-name cicdtest_group \
-          --s3-location bucket=cicdtest-s3,bundleType=zip,key=cicdtest-s3.zip
+          --s3-location bucket=cicdtest-s3,bundleType=zip,key=cicdtest.zip
