@@ -5,7 +5,7 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: cicdtest_group CICD(build)
+name: cicdtest CICD(build)
 
 on:
   push:
@@ -72,7 +72,7 @@ jobs:
         cp ./Dockerfile ./deploy/
         cp ./deploy.sh ./deploy/
         cp ./build/libs/*.jar ./deploy/
-        zip -r -qq -j ./cicdtest.zip ./deploy
+        zip -r -qq -j ./cicdtest-s3.zip ./deploy
 
     # S3에 zip 파일 업로드
     - name: Upload to S3
@@ -87,7 +87,7 @@ jobs:
         aws deploy create-deployment --application-name cicdtest \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --deployment-group-name cicdtest_group \
-          --s3-location bucket=cicdtest-s3,bundleType=zip,key=cicdtest.zip
+          --s3-location bucket=cicdtest-s3,bundleType=zip,key=cicdtest-s3.zip
 
     # 배포 결과 Slack 알람 전송
     - name: Slack 알람 발송
